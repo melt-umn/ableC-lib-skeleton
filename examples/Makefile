@@ -38,9 +38,9 @@ CFLAGS=
 LIB_DIRS=$(wildcard $(EXTS_BASE)/*/lib)
 # Flags passed to the linker specifying the appropriate directories
 LDFLAGS=$(addprefix -L, $(LIB_DIRS))
-# Flags passed to the linker specifying the shared library path and libraries to link
-COMMA=,
-LDLIBS=$(addprefix -Wl$(COMMA)-rpath=, $(LIB_DIRS)) -lskeleton
+# Flags passed to the linker specifying libraries to link
+# Specify skeleton is to be linked staticlly, everything else dynamically
+LDLIBS=-Wl,-Bstatic -lskeleton -Wl,-Bdynamic
 
 all: $(ABLEC_JAR) $(C_FILES) $(OBJECTS) $(EXECUTABLES) $(TESTS)
 
