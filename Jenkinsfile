@@ -79,6 +79,12 @@ node {
       }
     }
     
+    stage ("Libraries") {
+      withEnv(["PATH=${SILVER_BASE}/support/bin/:${env.PATH}"]) {
+        sh "make libraries"
+      }
+    }
+    
     stage ("Examples") {
       withEnv(["PATH=${SILVER_BASE}/support/bin/:${env.PATH}"]) {
         sh "make examples"
