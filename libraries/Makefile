@@ -14,7 +14,7 @@ STATIC_LIBRARY=$(LIB_DIR)/lib$(LIB_NAME).a
 # All C files to compile
 C_FILES=$(wildcard *.c)
 # All object files that should be generated
-OBJECTS=$(addprefix $(BIN_DIR), $(C_FILES:.c=.o))
+OBJECTS=$(addprefix $(OBJECT_DIR)/,$(C_FILES:.c=.o))
 
 # Flags passed to the C compiler, e.g. to enable various compiler extensions
 CFLAGS=-fpic
@@ -26,16 +26,19 @@ all: $(SHARED_LIBRARY) $(STATIC_LIBRARY)
 $(OBJECT_DIR)/%.o: %.c | $(OBJECT_DIR)
 	$(CC) -c $(CPPFLAGS) $(CFLAGS) $^ -o $@
 
-$(SHARED_LIBRARY): $(OBJECTS)
+$(SHARED_LIBRARY): $(OBJECTS) | $(LIB_DIR)
 	$(CC) $(LDFLAGS) $^ -o $@
 
-$(STATIC_LIBRARY): $(OBJECTS)
+$(STATIC_LIBRARY): $(OBJECTS) | $(LIB_DIR)
 	$(AR) rcs $@ $^
 
 $(OBJECT_DIR):
 	mkdir -p $@
 
+$(LIB_DIR):
+	mkdir -p $@
+
 clean:
-	rm -rf *~ $(OBJECT_DIR) $(SHARED_LIBRARY) $(STATIC_LIBRARY)
+	rm -rf *~ $(OBJECT_DIR) $(LIB_DIR)
 
 .PHONY: all clean
