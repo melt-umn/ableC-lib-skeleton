@@ -1,4 +1,4 @@
-## A very simple 'skeleton' extension
+## A very simple 'skeleton' extension that uses a library
 
 This sample extension exemplifies an organization that some might
 find useful in writing language extensions for ableC.
@@ -19,9 +19,10 @@ extension does in fact pass the modular analyses.
 The `tests` directory contains some positive and negative tests of
 various features of the extension.  
 
-Library headers and compiled libraries used by an extension are placed in the
-`include` and `lib` directories, respectively.  The library sources, along
-with a `Makefile` to build the libraries, are placed in the `libraries` directory.  
+Headers and sources for libraries used by an extension are placed in the
+`include` and `src` directories, respectively.  A `Makefile` is included
+in the `src` directory to build the library, placing object files and
+compiled libraries in the `bin` and `lib` directories, respectively.  
 
 At the top level, another `Makefile` is provided to allow examples,
 modular analyses, and tests to be easily built.  

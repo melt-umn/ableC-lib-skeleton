@@ -1,6 +1,6 @@
 
 # The directory in which to place intermediate object files
-OBJECT_DIR=bin
+OBJECT_DIR=../bin
 # The directory in which to place compiled libraries
 LIB_DIR=../lib
 
