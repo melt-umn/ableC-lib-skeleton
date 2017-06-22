@@ -64,7 +64,7 @@ $(ABLEC_JAR): $(GRAMMAR_SOURCES)
 %.c: %.xc $(ABLEC_JAR)
 	java -jar $(ABLEC_JAR) $< $(XCFLAGS)
 
-%.out: %.o $(LIBRARIES_SOURCES) | libs
+%.out: %.o $(SRC_SOURCES) | libs
 	$(CC) $(LDFLAGS) $< $(LOADLIBES) $(LDLIBS) -o $@
 
 translate_error/%.test: translate_error/%.xc $(ABLEC_JAR)
