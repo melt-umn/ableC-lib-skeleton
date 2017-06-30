@@ -106,7 +106,7 @@ node {
     stage ("Libraries") {
       withEnv(env) {
         dir("extensions/${extension_name}") {
-          sh "make libraries"
+          sh "make libs"
         }
       }
     }
