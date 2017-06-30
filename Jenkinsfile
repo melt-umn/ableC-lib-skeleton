@@ -53,11 +53,21 @@ node {
     def env = [
       "PATH=${params.SILVER_BASE}/support/bin/:${env.PATH}",
       "ABLEC_BASE=${ablec_base}",
-      "EXTS_BASE=${WORKSPACE}/extensions"
+      "EXTS_BASE=${WORKSPACE}/extensions",
+      "SVFLAGS=-G ${WORKSPACE}/generated"
     ]
 
     /* stages are pretty much just labels about what's going on */
     stage ("Build") {
+      /******** TEMPORARY: while this Jenkinsfile is in flux, whack the workspace hard */
+      stash includes: "extensions/${extension_name}/,ableC/", name: 'old', useDefaultExcludes: false
+      deleteDir()
+      unstash 'old'
+
+      /* Clean Silver-generated files from previous builds in this workspace */
+      sh "mkdir -p generated"
+      sh "rm -rf generated/* || true"
+
       /* don't check out extension under ableC_Home because doing so would allow
        * the Makefiles to find ableC with the included search paths, but we want
        * to explicitly specify the path to ableC according to ABLEC_BASE */
@@ -66,7 +76,8 @@ node {
                doGenerateSubmoduleConfigurations: scm.doGenerateSubmoduleConfigurations,
                extensions: [
                  [ $class: 'RelativeTargetDirectory',
-                   relativeTargetDir: "extensions/${extension_name}"]
+                   relativeTargetDir: "extensions/${extension_name}"],
+                 [ $class: 'CleanCheckout']
                  ],
                submoduleCfg: scm.submoduleCfg,
                userRemoteConfigs: scm.userRemoteConfigs
@@ -74,12 +85,11 @@ node {
 
       checkout([ $class: 'GitSCM',
                  branches: [[name: '*/develop']],
-                 doGenerateSubmoduleConfigurations: false,
                  extensions: [
                    [ $class: 'RelativeTargetDirectory',
-                     relativeTargetDir: 'ableC']
+                     relativeTargetDir: 'ableC'],
+                   [ $class: 'CleanCheckout']
                  ],
-                 submoduleCfg: [],
                  userRemoteConfigs: [
                    [url: 'https://github.com/melt-umn/ableC.git']
                  ]
@@ -88,7 +98,7 @@ node {
       /* env.PATH is the master's path, not the executor's */
       withEnv(env) {
         dir("extensions/${extension_name}") {
-          sh "make build"
+          sh "make clean build"
         }
       }
     }

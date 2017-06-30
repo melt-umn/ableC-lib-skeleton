@@ -13,7 +13,7 @@ GRAMMAR_DIRS=$(ABLEC_BASE) $(wildcard $(EXTS_BASE)/*/grammars)
 # All silver files in included grammars, to be included as dependancies
 GRAMMAR_SOURCES=$(shell find $(GRAMMAR_DIRS) -name *.sv -print0 | xargs -0)
 # Flags passed to silver including the appropriate directories
-SVFLAGS=$(addprefix -I ,$(GRAMMAR_DIRS))
+override SVFLAGS+=$(addprefix -I ,$(GRAMMAR_DIRS))
 
 # All extended C files to compile
 XC_FILES=$(wildcard *.xc)
@@ -39,7 +39,7 @@ LIB_DIRS=$(wildcard $(EXTS_BASE)/*/lib)
 # Flags passed to the linker specifying the appropriate directories
 LDFLAGS=$(addprefix -L,$(LIB_DIRS))
 # Flags passed to the linker specifying libraries to link
-# Specify skeleton is to be linked staticlly, everything else dynamically
+# Specify skeleton is to be linked statically, everything else dynamically
 LDLIBS=-Wl,-Bstatic -lskeleton -Wl,-Bdynamic
 
 # All directories contining extension library sources
@@ -54,7 +54,7 @@ all: $(ABLEC_JAR) $(C_FILES) $(OBJECTS) $(EXECUTABLES) $(TESTS)
 libs: $(LIBS)
 
 $(LIBS):
-	@cd $(@:libs=src) && $(MAKE)
+	cd $(@:libs=src) && $(MAKE)
 
 $(ABLEC_JAR): $(GRAMMAR_SOURCES)
 	touch $(wildcard $(ARTIFACT)/*.sv)
