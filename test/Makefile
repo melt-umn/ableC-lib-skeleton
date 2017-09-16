@@ -14,6 +14,8 @@ GRAMMAR_DIRS=$(ABLEC_BASE) $(wildcard $(EXTS_BASE)/*/grammars)
 GRAMMAR_SOURCES=$(shell find $(GRAMMAR_DIRS) -name *.sv -print0 | xargs -0)
 # Flags passed to silver including the appropriate directories
 override SVFLAGS+=$(addprefix -I ,$(GRAMMAR_DIRS))
+# Flags passed to Java when invoking ableC
+override JAVAFLAGS+=-Xss6M
 
 # All extended C files to test
 XC_FILES=$(wildcard translate_error/*.xc) $(wildcard runtime_error/*.xc) $(wildcard positive/*.xc)
@@ -63,14 +65,14 @@ $(ABLEC_JAR): $(GRAMMAR_SOURCES)
 	silver -o $(ABLEC_JAR) $(SVFLAGS) $(ARTIFACT)
 
 %.c: %.xc $(ABLEC_JAR)
-	java -jar $(ABLEC_JAR) $< $(XCFLAGS)
+	java $(JAVAFLAGS) -jar $(ABLEC_JAR) $< $(XCFLAGS)
 
 %.out: %.o $(SRC_SOURCES) | libs
 	$(CC) $(LDFLAGS) $< $(LOADLIBES) $(LDLIBS) -o $@
 
 translate_error/%.test: translate_error/%.xc $(ABLEC_JAR)
 	@echo "java -jar $(ABLEC_JAR) $< $(XCFLAGS)"
-	@if java -jar $(ABLEC_JAR) $< $(XCFLAGS); then echo "Failed to error"; exit 1; fi
+	@if java $(JAVAFLAGS) -jar $(ABLEC_JAR) $< $(XCFLAGS); then echo "Failed to error"; exit 1; fi
 	touch $@
 
 runtime_error/%.test: runtime_error/%.out
