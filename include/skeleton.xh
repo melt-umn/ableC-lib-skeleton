@@ -1,1 +1,4 @@
-const char* getSkeletonString(void);
+// This header file should be included by all extension programs, and may contain
+// extension constructs
+
+#include <skeleton.h>

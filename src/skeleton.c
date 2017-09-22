@@ -1,3 +1,5 @@
+#include <skeleton.h>
+
 const char* getSkeletonString(void) {
     return "                 .-\"```\"-.     \n"
         "                /         \\    \n"
