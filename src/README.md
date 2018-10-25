@@ -1,1 +1,1 @@
-This extension includes the source files for the shared library.
+This directory includes the source files for the shared library.
