@@ -2,3 +2,5 @@
 // extension constructs
 
 #include <skeleton.h>
+
+void print_skeleton();

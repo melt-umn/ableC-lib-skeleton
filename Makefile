@@ -3,8 +3,8 @@
 # `make`: build the artifact and run all tests
 #
 # `make build`: build the artifact
-#
-# `make libs`: build any libraries packaged for use with the extension
+# 
+# `make libraries`: build the extension's libraries
 #
 # `make examples`: compile and run the example uses of the extension
 #
@@ -26,42 +26,11 @@
 #       e.g. `make -B analyses`, `make -B mwda`, etc.
 #
 
+EXT_NAME=ableC-lib-skeleton
+EXT_GRAMMAR=edu:umn:cs:melt:exts:ableC:libskeleton
+LIB_NAME=skeleton
+
 # Path from current directory to top level ableC repository
 ABLEC_BASE?=../../ableC
-# Path from current directory to top level extensions directory
-EXTS_BASE?=../../extensions
 
-MAKEOVERRIDES=ABLEC_BASE=$(abspath $(ABLEC_BASE)) EXTS_BASE=$(abspath $(EXTS_BASE))
-
-all: examples analyses test
-
-build:
-	$(MAKE) -C examples ableC.jar
-
-libs:
-	$(MAKE) -C src
-
-examples:
-	$(MAKE) -C examples
-
-analyses:
-	$(MAKE) -C modular_analyses
-
-mda:
-	$(MAKE) -C modular_analyses mda
-
-mwda:
-	$(MAKE) -C modular_analyses mwda
-
-test:
-	$(MAKE) -C tests -k
-
-clean:
-	rm -f *~
-	$(MAKE) -C src clean
-	$(MAKE) -C examples clean
-	$(MAKE) -C modular_analyses clean
-	$(MAKE) -C tests clean
-
-.PHONY: all build libs examples analyses mda mwda test clean
-.NOTPARALLEL: # Avoid running multiple Silver builds in parallel
+include $(ABLEC_BASE)/extension.mk
